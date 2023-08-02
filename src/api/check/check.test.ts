@@ -1,5 +1,5 @@
-import { build } from '../../infra/server/server'
 import { test } from 'tap'
+import { build } from '../../infra/server/server'
 
 void test('requests the "/check" route', async (t) => {
   const app = build()
