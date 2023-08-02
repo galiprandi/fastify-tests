@@ -1,8 +1,8 @@
-import { type FastifyServerOptions, type FastifyInstance, type RouteHandlerMethod } from 'fastify'
+import { type FastifyServerOptions, type FastifyInstance, type RouteHandlerMethod, type FastifySchema } from 'fastify'
 import { faker } from '@faker-js/faker'
 
 export default async function (app: FastifyInstance, options: FastifyServerOptions) {
-  app.get('', rootHandler)
+  app.get('', { schema: rootGetSchema }, rootHandler)
 }
 
 const rootHandler: RouteHandlerMethod = async () => ({
@@ -10,14 +10,40 @@ const rootHandler: RouteHandlerMethod = async () => ({
 })
 
 const getRandomUser = () => ({
-  id: faker.datatype.uuid(),
-  name: faker.name.firstName(),
-  lastName: faker.name.lastName(),
+  id: faker.string.uuid(),
+  name: faker.person.firstName(),
+  lastName: faker.person.lastName(),
   phone: faker.phone.number(),
   email: faker.internet.email(),
   avatar: faker.image.avatar(),
-  city: faker.address.city(),
-  country: faker.address.country(),
+  city: faker.location.city(),
+  country: faker.location.country(),
 })
 
 const users = faker.helpers.multiple(getRandomUser, { count: 10 })
+
+const rootGetSchema: FastifySchema = {
+  response: {
+    200: {
+      type: 'object',
+      properties: {
+        users: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              name: { type: 'string' },
+              lastName: { type: 'string' },
+              phone: { type: 'string' },
+              email: { type: 'string' },
+              avatar: { type: 'string' },
+              city: { type: 'string' },
+              country: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+  },
+}
