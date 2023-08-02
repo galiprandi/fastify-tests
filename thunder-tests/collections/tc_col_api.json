@@ -1,0 +1,72 @@
+{
+    "_id": "985f722d-ac71-4182-beaf-3ce018c34a2f",
+    "colName": "API",
+    "created": "2023-08-02T03:40:39.963Z",
+    "sortNum": 10000,
+    "folders": [
+        {
+            "_id": "2bd4973a-0a24-4386-a615-cdb5f20b1812",
+            "name": "v1",
+            "containerId": "",
+            "created": "2023-08-02T03:42:46.820Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "cd908116-48f2-4c63-b370-6def6c183b12",
+            "name": "users",
+            "containerId": "2bd4973a-0a24-4386-a615-cdb5f20b1812",
+            "created": "2023-08-02T03:42:57.356Z",
+            "sortNum": 20000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "99baf058-888f-404a-9d36-5b9da0f8c6f3",
+            "colId": "985f722d-ac71-4182-beaf-3ce018c34a2f",
+            "containerId": "",
+            "name": "/check",
+            "url": "{{api-url}}/check",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-08-02T03:40:39.968Z",
+            "modified": "2023-08-02T03:40:39.968Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                }
+            ]
+        },
+        {
+            "_id": "a1951cca-d8f8-4a9e-95c6-909b11ba145a",
+            "colId": "985f722d-ac71-4182-beaf-3ce018c34a2f",
+            "containerId": "cd908116-48f2-4c63-b370-6def6c183b12",
+            "name": "/v1/users",
+            "url": "{{api-url}}/v1/users",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-08-02T03:41:03.390Z",
+            "modified": "2023-08-02T03:41:57.045Z",
+            "headers": [],
+            "params": [],
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                },
+                {
+                    "type": "json-query",
+                    "custom": "json.users",
+                    "action": "istype",
+                    "value": "array"
+                }
+            ]
+        }
+    ]
+}
