@@ -12,7 +12,7 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.ts", "node_modules"],
+  "exclude": ["build", "node_modules"],
   "ts-node": {
     "transpileOnly": true
   }
