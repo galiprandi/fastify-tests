@@ -1,4 +1,4 @@
-import { PinoLoggerOptions } from 'fastify/types/logger.js'
+import { type PinoLoggerOptions } from 'fastify/types/logger.js'
 
 export const environment = process.env.NODE_ENV ?? 'development'
 

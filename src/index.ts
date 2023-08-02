@@ -2,10 +2,9 @@ import { appName, build } from './infra/server/server'
 
 const { PORT = '8000', HOST = '0.0.0.0' } = process.env
 
-const listenTextResolver = (address: string) =>
-  `${appName} Listening at ${address}/check`
+const listenTextResolver = (address: string) => `${appName} Listening at ${address}/check`
 
-async function init() {
+;(function init() {
   const app = build()
 
   app.listen(
@@ -14,13 +13,11 @@ async function init() {
       host: HOST,
       listenTextResolver,
     },
-    err => {
+    (err) => {
       if (err) {
-        console.error(err)
+        app.log.fatal(err)
         process.exit(1)
       }
-    }
+    },
   )
-}
-
-init()
+})()

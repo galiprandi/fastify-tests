@@ -1,13 +1,11 @@
 import Fastify from 'fastify'
-import routes from '@fastify/routes'
-import autoLoad from '@fastify/autoload'
+import AutoLoad from '@fastify/autoload'
 import { join } from 'node:path'
 import { envToLogger, environment } from './logger'
 
-// import { dirname, join } from 'node:path'
-// import { URL, fileURLToPath } from 'node:url'
+const { DEBUG = true } = process.env
 
-// const { __dirname } = fileDirName(import.meta)
+export const appName = '🚀 APP:'
 
 export function build() {
   const server = Fastify({
@@ -15,30 +13,26 @@ export function build() {
     logger: envToLogger[environment] ?? true,
   })
 
-  server.register(routes)
-
   server
-    .register(autoLoad, {
+    .register(AutoLoad, {
       dir: join(__dirname, 'plugins'),
     })
-    .ready(err =>
-      err
-        ? server.log.fatal(err)
-        : server.log.info(`${appName} All Plugins ready!`)
-    )
+    .ready((err) => {
+      err ? server.log.fatal(err) : server.log.info(`${appName} All Plugins ready!`)
+    })
 
   server
-    .get('/check', async ({ log }) => {
-      log.info(server.routes, `${appName} Available routes`)
-      return { status: 'ok' }
+    .register(AutoLoad, {
+      dir: join(__dirname, '../../api'),
+      options: { prefix: '/api' },
     })
-    .ready(error => error && server.log.fatal(error))
+    .ready((err) => {
+      err ? server.log.fatal(err) : server.log.info(`${appName} All Plugins ready!`)
+    })
+
+  server.ready(() => {
+    DEBUG && server.log.info(server.printRoutes())
+  })
 
   return server
 }
-
-export type Server = ReturnType<typeof build>
-
-export const appName = '🚀 APP:'
-
-const result = JSON.parse('{}')
