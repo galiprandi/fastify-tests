@@ -46,13 +46,19 @@
             "colId": "985f722d-ac71-4182-beaf-3ce018c34a2f",
             "containerId": "cd908116-48f2-4c63-b370-6def6c183b12",
             "name": "/v1/users",
-            "url": "{{api-url}}/v1/users",
+            "url": "{{api-url}}/v1/users?count=1",
             "method": "GET",
             "sortNum": 10000,
             "created": "2023-08-02T03:41:03.390Z",
-            "modified": "2023-08-02T03:41:57.045Z",
+            "modified": "2023-08-02T15:52:49.713Z",
             "headers": [],
-            "params": [],
+            "params": [
+                {
+                    "name": "count",
+                    "value": "1",
+                    "isPath": false
+                }
+            ],
             "tests": [
                 {
                     "type": "res-code",
