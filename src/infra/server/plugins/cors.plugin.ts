@@ -1,10 +1,10 @@
 import { type FastifyInstance } from 'fastify'
-import cors from '@fastify/cors'
+import Cors from '@fastify/cors'
 import { appName } from '../server'
 
-const name = 'CORS'
+export const autoConfig = { name: 'CORS v2' }
 
-export default async (app: FastifyInstance) =>
-  app.register(cors, { origin: '*' }).ready((err) => {
+export default async (app: FastifyInstance, { name }: typeof autoConfig) =>
+  app.register(Cors, { origin: ['*', 'localhost'] }).ready((err) => {
     err ? app.log.fatal(err, `${appName} ${name} Plugin failed!`) : app.log.info(`${appName} ${name} Plugin ready!`)
   })
