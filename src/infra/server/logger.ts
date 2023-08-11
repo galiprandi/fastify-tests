@@ -8,7 +8,6 @@ export const envToLogger: Record<string, PinoLoggerOptions | boolean> = {
       target: 'pino-pretty',
       options: {
         translateTime: 'HH:MM:ss Z',
-        ignore: 'pid,hostname',
       },
     },
   },
