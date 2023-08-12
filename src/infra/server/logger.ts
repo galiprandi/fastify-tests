@@ -1,3 +1,4 @@
+import Fastify from 'fastify'
 import { type PinoLoggerOptions } from 'fastify/types/logger.js'
 
 export const environment = process.env.NODE_ENV ?? 'development'
@@ -15,3 +16,5 @@ export const envToLogger: Record<string, PinoLoggerOptions | boolean> = {
   production: true,
   test: false,
 }
+
+export const log = Fastify({ logger: envToLogger[environment] ?? true }).log

@@ -9,6 +9,8 @@ import Cors from '@fastify/cors'
 import { CorsOptions } from './config/cors'
 import Helmet from '@fastify/helmet'
 import { HelmetOptions } from './config/helmet'
+import { fastifySchedule } from '@fastify/schedule'
+import { job } from './config/jobs'
 
 export const appName = '🚀 APP:'
 
@@ -22,6 +24,7 @@ export async function build() {
     .register(Env, EnvOptions)
     .register(Cors, CorsOptions)
     .register(Helmet, HelmetOptions)
+    .register(fastifySchedule)
     .register(AutoLoad, {
       dir: join(__dirname, '../../api'),
       options: { prefix: '/api' },
@@ -36,6 +39,13 @@ export async function build() {
       srv.log.info(`${appName} Plugins ready!`)
       srv.log.info(`${appName} Routes ready!`)
     }
+    srv.scheduler.addSimpleIntervalJob(job)
+    const jobs = srv.scheduler
+      .getAllJobs()
+      .map(({ id }) => id)
+      .join(', ')
+
+    jobs.length ? srv.log.warn(`${appName} Register jobs IDs ${jobs}`) : srv.log.info(`${appName} No jobs registered`)
   })
 
   return srv
