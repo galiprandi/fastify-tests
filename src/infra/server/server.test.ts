@@ -2,7 +2,7 @@ import { test } from 'tap'
 import { appName, build } from './server'
 
 void test('Build App and test core functionality', async (t) => {
-  const app = build()
+  const app = await build()
 
   t.teardown(async () => {
     await app.close()
@@ -14,7 +14,7 @@ void test('Build App and test core functionality', async (t) => {
 })
 
 void test('should work with fetch', async (t) => {
-  const app = build()
+  const app = await build()
 
   t.teardown(async () => {
     await app.close()

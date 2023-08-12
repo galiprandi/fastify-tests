@@ -2,7 +2,7 @@ import { build } from '../../../infra/server/server'
 import { test } from 'tap'
 
 void test('requests the "/v1/users" route', async (t) => {
-  const app = build()
+  const app = await build()
 
   t.teardown(async () => {
     await app.close()

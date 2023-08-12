@@ -1,73 +1,42 @@
 import { envToLogger, environment } from './logger'
 import { type JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts'
-
 import AutoLoad from '@fastify/autoload'
+import Env from '@fastify/env'
 import Cors from '@fastify/cors'
 import Fastify from 'fastify'
 import { join } from 'node:path'
-
-const { DEBUG = true } = process.env
+import { EnvOptions } from './configs/env'
+import { CorsOptions } from './configs/cors'
 
 export const appName = '🚀 APP:'
 
-export function build() {
-  const server = Fastify({
+export async function build() {
+  const srv = Fastify({
     disableRequestLogging: true,
     logger: envToLogger[environment] ?? true,
   }).withTypeProvider<JsonSchemaToTsProvider>()
 
-  // server
-  //   .register(AutoLoad, {
-  //     dir: join(__dirname, 'plugins'),
-  //     ignorePattern: /.*(test|spec)\.ts/,
-  //   })
-  //   .ready((err) => {
-  //     err ? server.log.fatal(err) : server.log.info(`${appName} All Plugins ready!`)
-  //   })
+  await srv.register(Env, EnvOptions)
+  await srv.register(Cors, CorsOptions)
+  srv.env.DEBUG
+    ? srv.log.info(`\n┌── ${appName} Plugins\n${srv.printPlugins()}`)
+    : srv.log.info(`${appName} Plugins ready!`)
 
-  void server.register(Cors, { origin: '*' }).ready((err) => {
-    err ? server.log.fatal(err, `${appName} CORS Plugin failed!`) : server.log.info(`${appName} CORS Plugin ready!`)
+  await srv.register(AutoLoad, {
+    dir: join(__dirname, '../../api'),
+    options: { prefix: '/api' },
+    ignorePattern: /.*(test|spec)\.ts/,
   })
 
-  server
-    .register(AutoLoad, {
-      dir: join(__dirname, '../../api'),
-      options: { prefix: '/api' },
-      ignorePattern: /.*(test|spec)\.ts/,
-    })
-    .ready((err) => {
-      err ? server.log.fatal(err) : server.log.info(`${appName} All Plugins ready!`)
-    })
+  srv.env.DEBUG
+    ? srv.log.info(`\n┌── ${appName} Routes\n${srv.printRoutes({ commonPrefix: false })}`)
+    : srv.log.info(`${appName} Routes ready!`)
 
-  server.get(
-    '/check',
-    {
-      schema: {
-        querystring: {
-          type: 'object',
-          properties: {
-            count: { type: 'string', default: 10 },
-          },
-        },
-
-        response: {
-          200: {
-            type: 'object',
-            properties: {
-              status: { type: 'string' },
-            },
-          },
-        },
-      } as const,
-    },
-    async ({ query: { count } }) => ({}),
-  )
-
-  server.ready(() => {
-    DEBUG && server.log.info(server.printRoutes())
+  srv.ready(() => {
+    srv.env.DEBUG && srv.log.info('\n', srv.printRoutes())
   })
 
-  return server
+  return srv
 }
 
-export type APPServer = ReturnType<typeof build>
+export type APPServer = Awaited<ReturnType<typeof build>>

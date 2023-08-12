@@ -2,7 +2,7 @@ import { test } from 'tap'
 import { build } from '../../infra/server/server'
 
 void test('requests the "/check" route', async (t) => {
-  const app = build()
+  const app = await build()
 
   t.teardown(async () => {
     await app.close()
